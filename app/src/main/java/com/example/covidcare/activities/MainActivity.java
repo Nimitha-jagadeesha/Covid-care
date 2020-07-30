@@ -28,48 +28,45 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-        FirebaseAuth mAuth;
-    DatabaseReference databaseUsers;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-            mAuth=FirebaseAuth.getInstance();
-            if(SignInOrRegister.isAdmin) {
-
-                startActivity(new Intent(this, AdminActivity.class));
-                finish();
-            }
-        databaseUsers = FirebaseDatabase.getInstance().getReference("Users");
+        mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_main);
-
-
-        try {
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            DrawerLayout drawer = findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
-            toggle.syncState();
-            NavigationView navigationView = findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-            FloatingActionButton fab = findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                            "mailto", "healthifySupport@gmail.com", null));
-                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Support request");
-                    startActivity(Intent.createChooser(emailIntent, "Send email..."));
-                }
-            });
-        } catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        //Checking if its admin Account
+        if (mAuth != null && Objects.equals(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), "nimitha1jagadeesha@gmail.com")) {
+            startActivity(new Intent(MainActivity.this, AdminActivity.class));
+            finish();
         }
+        else if (mAuth == null)
+            startActivity(new Intent(this, SignInOrRegister.class));
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "healthifySupport@gmail.com", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Support request");
+                startActivity(Intent.createChooser(emailIntent, "Send email..."));
+            }
+        });
+
     }
 
 
@@ -91,9 +88,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
             finish();
-            startActivity(new Intent(this,SignInOrRegister.class));
-        }
-        else if (id == R.id.nav_share) {
+            startActivity(new Intent(this, SignInOrRegister.class));
+        } else if (id == R.id.nav_share) {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_TEXT,
@@ -104,17 +100,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.emergencyCall) {
 
-            String s = "tel:1075" ;
+            String s = "tel:1075";
             Intent intent = new Intent(Intent.ACTION_CALL);
             intent.setData(Uri.parse(s));
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE},1);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
                 return true;
             }
             startActivity(intent);
 
         }
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -123,24 +118,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        String id = mAuth.getCurrentUser().getUid();
-        databaseUsers.child(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                UsersData data = dataSnapshot.getValue(UsersData.class);
-                SignInOrRegister.isAdmin=data.getAdmin();
-                if(SignInOrRegister.isAdmin)
-                {
-                    startActivity(new Intent(MainActivity.this,AdminActivity.class));
-                    finish();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
     }
 }

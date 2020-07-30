@@ -9,6 +9,8 @@ import android.os.Handler;
 import com.example.covidcare.R;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 public class SplashSceen extends AppCompatActivity {
 
     FirebaseAuth mAuth;
@@ -23,7 +25,10 @@ public class SplashSceen extends AppCompatActivity {
                 Intent i;
                 if(mAuth.getCurrentUser()!=null)
                 {
-                    i=new Intent(SplashSceen.this, MainActivity.class);
+                    if(Objects.equals(mAuth.getCurrentUser().getEmail(), "nimitha1jagadeesha@gmail.com"))
+                    i=new Intent(SplashSceen.this, AdminActivity.class);
+                    else
+                        i=new Intent(SplashSceen.this, MainActivity.class);
                 }
                 else {
                     i = new Intent(SplashSceen.this, SignInOrRegister.class);

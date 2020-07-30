@@ -102,6 +102,10 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             startActivity(intent);
 
         }
+        else if(id==R.id.nav_admin)
+        {
+            startActivity(new Intent(this,AdminActivity.class));
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
