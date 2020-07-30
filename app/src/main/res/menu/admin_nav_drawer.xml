@@ -18,16 +18,16 @@
 
         <item
             android:id="@+id/nav_share"
-            android:icon="@drawable/ic_launcher_background"
-            android:title="Share" />
+            android:icon="@drawable/share"
+            android:title="@string/share" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_launcher_background"
-            android:title="Log Out" />
+            android:title="@string/log_out" />
         <item
             android:id="@+id/nav_admin"
-            android:icon="@drawable/ic_launcher_background"
-            android:title="Admin Options" />
+            android:icon="@drawable/admin"
+            android:title="@string/admin_options" />
     </group>
 
 
