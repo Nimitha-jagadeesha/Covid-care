@@ -102,9 +102,14 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             startActivity(intent);
 
         }
-        else if(id==R.id.nav_admin)
-        {
-            startActivity(new Intent(this,AdminActivity.class));
+        else if(id==R.id.nav_admin) {
+            try {
+                startActivity(new Intent(this, AdminOptions.class));
+            }
+            catch(Exception e)
+            {
+                Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
+            }
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

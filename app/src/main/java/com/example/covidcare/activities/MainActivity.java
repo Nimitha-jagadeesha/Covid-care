@@ -14,19 +14,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.covidcare.BuildConfig;
 import com.example.covidcare.R;
-import com.example.covidcare.models.UsersData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
@@ -38,14 +31,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-        mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_main);
+        mAuth = FirebaseAuth.getInstance();
         //Checking if its admin Account
-        if (mAuth != null && Objects.equals(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), "nimitha1jagadeesha@gmail.com")) {
+        if (mAuth.getCurrentUser() != null && Objects.equals(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), "nimitha1jagadeesha@gmail.com")) {
             startActivity(new Intent(MainActivity.this, AdminActivity.class));
             finish();
-        }
-        else if (mAuth == null)
+        } else if (mAuth.getCurrentUser() == null)
             startActivity(new Intent(this, SignInOrRegister.class));
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
             }
         });
-
     }
 
 
@@ -110,14 +101,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
 
         }
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
     }
 }

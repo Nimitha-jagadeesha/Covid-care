@@ -3,9 +3,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="emergencycall">Emergency Call</string>
-    <string name="add_user_phone_number">Add User Phone number</string>
     <string name="sign_in_register">Sign In /Register</string>
-    <string name="admin_options">Admin Options</string>
-    <string name="log_out">Log Out</string>
-    <string name="share">Share</string>
+    <string name="lets_fight_together">Lets Fight together</string>
 </resources>

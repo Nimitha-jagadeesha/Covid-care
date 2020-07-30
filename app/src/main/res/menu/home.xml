@@ -4,29 +4,28 @@
     <item
         android:id="@+id/share"
         android:orderInCategory="100"
-        android:icon="@drawable/share"
+        android:icon="@drawable/ic_launcher_background"
         android:title="Share"
         app:showAsAction="never" />
     <item
         android:id="@+id/profile"
         android:orderInCategory="100"
-        android:icon="@drawable/share"
+        android:icon="@drawable/ic_launcher_background"
         android:title="Profile"
         app:showAsAction="ifRoom" />
-
     <item
         android:id="@+id/about"
         android:orderInCategory="100"
-        android:icon="@drawable/share"
+        android:icon="@drawable/ic_launcher_background"
         android:title="About Us"
         app:showAsAction="never" />
     <item
         android:id="@+id/nav_logOut"
-        android:icon="@drawable/share"
+        android:icon="@drawable/ic_launcher_background"
         android:title="Log Out" />
     <item
         android:id="@+id/emergencyCall"
-        android:icon="@drawable/share"
+        android:icon="@drawable/ic_launcher_background"
         android:title="Call"
         app:showAsAction="ifRoom"/>
 </menu>
