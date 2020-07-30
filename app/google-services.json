@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "401097811781",
+    "firebase_url": "https://covid-care-91ecd.firebaseio.com",
+    "project_id": "covid-care-91ecd",
+    "storage_bucket": "covid-care-91ecd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401097811781:android:307db5e26fd22e9033c02c",
+        "android_client_info": {
+          "package_name": "com.example.covidcare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401097811781-lmgp0d9e2r48ni4pesrakimqau8o6apv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU3lsSGGImZcAu1BO7fCUjgVfR9Rdi9FA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401097811781-lmgp0d9e2r48ni4pesrakimqau8o6apv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
