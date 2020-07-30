@@ -5,8 +5,8 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/emergencyCall"
-            android:icon="@drawable/ic_launcher_background"
-            android:title="Call" />
+            android:icon="@drawable/emergency_call"
+            android:title="@string/emergencycall" />
         <item
             android:id="@+id/about"
             android:icon="@drawable/ic_launcher_background"
@@ -15,7 +15,7 @@
             android:id="@+id/profile"
             android:icon="@drawable/ic_launcher_background"
             android:title="Profile" />
-       
+
         <item
             android:id="@+id/nav_share"
             android:icon="@drawable/ic_launcher_background"

@@ -2,4 +2,5 @@
     <string name="app_name">Covid Care</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="emergencycall">Emergency Call</string>
 </resources>
