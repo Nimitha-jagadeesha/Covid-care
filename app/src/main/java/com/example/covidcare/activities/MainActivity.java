@@ -1,4 +1,4 @@
-package com.example.covidcare;
+package com.example.covidcare.activities;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,21 +16,35 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.covidcare.BuildConfig;
+import com.example.covidcare.R;
+import com.example.covidcare.models.UsersData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    FirebaseAuth mAuth;
+        FirebaseAuth mAuth;
+    DatabaseReference databaseUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-        mAuth=FirebaseAuth.getInstance();
+            mAuth=FirebaseAuth.getInstance();
+            if(SignInOrRegister.isAdmin) {
 
-        setContentView(R.layout.activity_admin);
+                startActivity(new Intent(this, AdminActivity.class));
+                finish();
+            }
+        databaseUsers = FirebaseDatabase.getInstance().getReference("Users");
+        setContentView(R.layout.activity_main);
 
 
         try {
@@ -106,4 +120,27 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         return true;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        String id = mAuth.getCurrentUser().getUid();
+        databaseUsers.child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UsersData data = dataSnapshot.getValue(UsersData.class);
+                SignInOrRegister.isAdmin=data.getAdmin();
+                if(SignInOrRegister.isAdmin)
+                {
+                    startActivity(new Intent(MainActivity.this,AdminActivity.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 }

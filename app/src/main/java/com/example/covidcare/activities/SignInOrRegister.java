@@ -1,15 +1,14 @@
-package com.example.covidcare;
+package com.example.covidcare.activities;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.service.autofill.UserData;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.covidcare.R;
 import com.example.covidcare.models.UsersData;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -91,7 +90,7 @@ public class SignInOrRegister extends AppCompatActivity {
                         isAdmin=data.getAdmin();
                         if(isAdmin)
                         {
-                            startActivity(new Intent(SignInOrRegister.this,AdminActivity.class));
+                            startActivity(new Intent(SignInOrRegister.this, AdminActivity.class));
                             finish();
                         }
                     }

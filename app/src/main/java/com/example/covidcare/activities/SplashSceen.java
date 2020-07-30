@@ -1,19 +1,13 @@
-package com.example.covidcare;
+package com.example.covidcare.activities;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
-import com.firebase.ui.auth.AuthUI;
+import com.example.covidcare.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class SplashSceen extends AppCompatActivity {
 
@@ -29,7 +23,7 @@ public class SplashSceen extends AppCompatActivity {
                 Intent i;
                 if(mAuth.getCurrentUser()!=null)
                 {
-                    i=new Intent(SplashSceen.this,MainActivity.class);
+                    i=new Intent(SplashSceen.this, MainActivity.class);
                 }
                 else {
                     i = new Intent(SplashSceen.this, SignInOrRegister.class);

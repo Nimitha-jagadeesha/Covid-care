@@ -1,7 +1,5 @@
-package com.example.covidcare;
+package com.example.covidcare.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,33 +16,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.covidcare.models.UsersData;
+import com.example.covidcare.BuildConfig;
+import com.example.covidcare.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-        FirebaseAuth mAuth;
-    DatabaseReference databaseUsers;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-            mAuth=FirebaseAuth.getInstance();
-            if(SignInOrRegister.isAdmin) {
+        mAuth=FirebaseAuth.getInstance();
 
-                startActivity(new Intent(this, AdminActivity.class));
-                finish();
-            }
-        databaseUsers = FirebaseDatabase.getInstance().getReference("Users");
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_admin);
 
 
         try {
@@ -91,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
             finish();
-            startActivity(new Intent(this,SignInOrRegister.class));
+            startActivity(new Intent(this, SignInOrRegister.class));
         }
         else if (id == R.id.nav_share) {
             Intent sendIntent = new Intent();
@@ -120,27 +108,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        String id = mAuth.getCurrentUser().getUid();
-        databaseUsers.child(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                UsersData data = dataSnapshot.getValue(UsersData.class);
-                SignInOrRegister.isAdmin=data.getAdmin(); 
-                if(SignInOrRegister.isAdmin)
-                {
-                    startActivity(new Intent(MainActivity.this,AdminActivity.class));
-                    finish();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
 }
