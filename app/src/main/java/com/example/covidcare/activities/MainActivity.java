@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DatabaseReference databaseHospitalData ;
     RecyclerView recyclerViewHospitalList;
     HospitalsAdaptor adaptor;
-    RecyclerView.LayoutManager manager;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Query query;
                 query = FirebaseDatabase.getInstance().getReference("data/"+item.toString());
                 query.addListenerForSingleValueEvent(valueEventListener);
-
+                adaptor.notifyDataSetChanged();
 
             }
             @Override
@@ -118,15 +119,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            progressBar.setVisibility(View.VISIBLE);
+            recyclerViewHospitalList.setVisibility(View.INVISIBLE);
+            HospitalExpert.clearListData();
             if (dataSnapshot.exists()) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     HospitalData hosdata = snapshot.getValue(HospitalData.class);
                     HospitalExpert.addHospitalData(hosdata);
                 }
                 adaptor.notifyDataSetChanged();
-                Toast.makeText(MainActivity.this,HospitalExpert.getHospitalsCount()+"",Toast.LENGTH_SHORT).show();
+
 
             }
+            progressBar.setVisibility(View.INVISIBLE);
+            recyclerViewHospitalList.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -146,8 +152,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         databaseHospitalData=FirebaseDatabase.getInstance().getReference().child("data");
         recyclerViewHospitalList=findViewById(R.id.recyclerviewHospitalView);
         recyclerViewHospitalList.setLayoutManager(new LinearLayoutManager(this));
-       adaptor =new HospitalsAdaptor(this);
+        adaptor =new HospitalsAdaptor(this);
         recyclerViewHospitalList.setAdapter(adaptor);
+        progressBar=findViewById(R.id.progressbar);
     }
 
 
