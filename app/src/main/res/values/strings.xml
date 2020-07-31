@@ -5,4 +5,9 @@
     <string name="emergencycall">Emergency Call</string>
     <string name="sign_in_register">Sign In /Register</string>
     <string name="lets_fight_together">Lets Fight together</string>
+    <string name="bed_avilability">Bed Avilability</string>
+    <string name="state">State:</string>
+    <string name="update">Update</string>
+    <string name="hospital_name">Hospital Name</string>
+    <string name="region">Region</string>
 </resources>

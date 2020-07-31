@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.example.covidcare.BuildConfig;
 import com.example.covidcare.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,12 +32,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+
         //Checking if its admin Account
         if (mAuth.getCurrentUser() != null && Objects.equals(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), "nimitha1jagadeesha@gmail.com")) {
             startActivity(new Intent(MainActivity.this, AdminActivity.class));
             finish();
         } else if (mAuth.getCurrentUser() == null)
             startActivity(new Intent(this, SignInOrRegister.class));
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -48,16 +49,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "healthifySupport@gmail.com", null));
+                        "mailto", "covidCareSupport@gmail.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Support request");
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
             }
         });
+
     }
 
 
