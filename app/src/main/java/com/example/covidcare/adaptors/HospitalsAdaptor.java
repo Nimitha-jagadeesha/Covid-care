@@ -31,9 +31,9 @@ public class HospitalsAdaptor extends RecyclerView.Adapter<HospitalsAdaptor.View
     public void onBindViewHolder(@NonNull HospitalsAdaptor.ViewHolder holder, int position) {
         View view=holder.view;
         TextView textView=view.findViewById(R.id.hospitalName);
-        textView.setText(HospitalExpert.getHospitalName(position));
+        textView.setText("Hospital Name: "+HospitalExpert.getHospitalName(position));
         TextView textViewNumberOfBeds=view.findViewById(R.id.numberOfBeds);
-        textViewNumberOfBeds.setText(HospitalExpert.getNumberOfBedsAvailable(position));
+        textViewNumberOfBeds.setText("Number Of Beds :"+HospitalExpert.getNumberOfBedsAvailable(position));
     }
 
     @Override
