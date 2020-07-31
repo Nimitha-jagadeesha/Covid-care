@@ -7,7 +7,7 @@ public class URLExpert
     }
 
     public static String getTotalCoronaCases() {
-        return "https://covid19.mathdro.id/api";
+        return "https://covid19.mathdro.id/api/countries/India";
     }
 }
 //https://covid19.mathdro.id/api

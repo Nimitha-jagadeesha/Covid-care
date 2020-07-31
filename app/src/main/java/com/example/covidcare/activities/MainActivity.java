@@ -14,23 +14,45 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.covidcare.BuildConfig;
 import com.example.covidcare.R;
+import com.example.covidcare.Utility.NetworkQueueSingleton;
+import com.example.covidcare.Utility.URLExpert;
+import com.example.covidcare.Utility.VolleyErrorHandle;
+import com.example.covidcare.dataexpert.StateExpert;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseAuth mAuth;
-
+    Spinner selectStateSpinner;
+    TextView conformedCasesTextView;
+    TextView RecoveredCasesTextView;
+    TextView DeathCasesTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         setContentView(R.layout.activity_main);
+        bindViews();
+        getData();
         mAuth = FirebaseAuth.getInstance();
 
         //Checking if its admin Account
@@ -61,6 +83,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+    }
+
+    private void bindViews() {
+        selectStateSpinner = findViewById(R.id.selectStatesSpinner);
+        conformedCasesTextView=findViewById(R.id.Confirmed_cases);
+        RecoveredCasesTextView=findViewById(R.id.RecoveredCases);
+        DeathCasesTextView=findViewById(R.id.DeathCases);
     }
 
 
@@ -108,5 +137,83 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void getData() {
+        StateExpert.clearAllStates();
+
+            JsonObjectRequest request = new JsonObjectRequest(
+                    Request.Method.GET,
+                    URLExpert.getAllStates(),
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            parseData(response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            VolleyErrorHandle.handleError(error, getApplicationContext());
+                        }
+                    }
+            );
+
+            NetworkQueueSingleton.geInstance(this).addToRequestQueue(request);
+        JsonObjectRequest cases = new JsonObjectRequest(
+                Request.Method.GET,
+                URLExpert.getTotalCoronaCases(),
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        parseCasesData(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyErrorHandle.handleError(error, getApplicationContext());
+                    }
+                }
+        );
+
+        NetworkQueueSingleton.geInstance(this).addToRequestQueue(cases);
+
+    }
+
+    private void parseCasesData(JSONObject response) {
+        try {
+            JSONObject cases=response.getJSONObject("confirmed");
+            conformedCasesTextView.setText("Confirmed:\n"+cases.getInt("value"));
+            cases=response.getJSONObject("recovered");
+            RecoveredCasesTextView.setText("Recovered:\n"+cases.getInt("value"));
+            cases=response.getJSONObject("deaths");
+            DeathCasesTextView.setText("Deaths:\n"+cases.getInt("value"));
+        } catch (JSONException e) {
+//        e.printStackTrace();
+        }
+    }
+
+    private void parseData(JSONObject response) {
+
+        try {
+            JSONObject data = response.getJSONObject("data");
+            JSONArray value = data.getJSONArray("regional");
+            for (int i = 0; i < value.length(); i++) {
+                JSONObject joke = ((JSONObject) value.get(i));
+                String state = joke.getString("state");
+                StateExpert.statesList.add(state);
+            }
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, StateExpert.statesList);
+            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            selectStateSpinner.setAdapter(arrayAdapter);
+            if (StateExpert.getSize() != 0) {
+                selectStateSpinner.setSelection(StateExpert.getSize() - 1);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
