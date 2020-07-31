@@ -66,7 +66,9 @@ public class AdminOptions extends AppCompatActivity {
 
     private void addToDatabase(String hospitalName, String NumberOfBeds) {
         hospitalName = hospitalName.toLowerCase();
-        databaseReference.child("India").child(selectedRegion).child(hospitalName).setValue(new HospitalData(NumberOfBeds, hospitalName));
+        databaseReference.child(selectedRegion).child(hospitalName).setValue(new HospitalData(NumberOfBeds, hospitalName,selectedRegion));
+        if(!selectedRegion.equals("INDIA"))
+            databaseReference.child("INDIA").child(hospitalName+"("+selectedRegion+")").setValue(new HospitalData(NumberOfBeds, hospitalName+"("+selectedRegion+")",selectedRegion));
         Toast.makeText(this, "Updated", Toast.LENGTH_LONG).show();
     }
 }
