@@ -20,10 +20,6 @@
             android:id="@+id/nav_share"
             android:icon="@drawable/share"
             android:title="@string/share" />
-        <item
-            android:id="@+id/logout"
-            android:icon="@drawable/ic_launcher_background"
-            android:title="Log Out" />
     </group>
 
 

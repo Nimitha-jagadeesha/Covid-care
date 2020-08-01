@@ -22,4 +22,6 @@
     <string name="phonenumber">Phone Number</string>
     <string name="add">Add</string>
     <string name="update_bed_availability_details"><u>Update bed availability details</u></string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="log_out">Log Out</string>
 </resources>

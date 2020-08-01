@@ -192,12 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.logout) {
-            FirebaseAuth.getInstance().signOut();
-            finish();
-            startActivity(new Intent(this, SignInOrRegister.class));
-        } else if (id == R.id.nav_share) {
+         if (id == R.id.nav_share) {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_TEXT,
@@ -267,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String state = joke.getString("state");
                 StateExpert.statesList.add(state);
             }
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, StateExpert.statesList);
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, StateExpert.statesList);
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             selectStateSpinner.setAdapter(arrayAdapter);
             if (StateExpert.getSize() != 0) {

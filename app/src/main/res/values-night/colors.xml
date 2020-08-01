@@ -3,9 +3,9 @@
     <color name="colorPrimary">#212121</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#2196f5</color>
-<!--    <color name="backgroundColor">#303030</color>-->
-<!--    <color name="cardBackgroundColor">#424242</color>-->
-<!--    <color name="textColor">#ffffff</color>-->
-<!--    <color name="tintColor">#ffffff</color>-->
+    <color name="backgroundColor">#303035</color>
+    <color name="cardBackground">#42424F</color>
+    <color name="textcolor">#ffffff</color>
+    <color name="button_text">#ffffff</color>
 <!--    <color name="buttonColor">#2196f3</color>-->
 </resources>

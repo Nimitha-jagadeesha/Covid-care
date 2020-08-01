@@ -1,8 +1,10 @@
 package com.example.covidcare.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -20,6 +22,7 @@ public class SplashSceen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_sceen);
         mAuth = FirebaseAuth.getInstance();
+        loadSettings();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -37,5 +40,19 @@ public class SplashSceen extends AppCompatActivity {
                 finish();
             }
         }, 500);
+    }
+
+    private void loadSettings() {
+
+        SharedPreferences sharedPreferences=getSharedPreferences("CovidCareSettings",MODE_PRIVATE);
+        Settings.checked=sharedPreferences.getBoolean("Setting",false);
+        if(Settings.checked)
+        {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else
+        {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 }
