@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:fontFamily="@font/restore_"
         android:text="@string/app_name"/>
     <TextView
         android:layout_width="wrap_content"

@@ -6,4 +6,5 @@
     <color name="cardBackground">#FFFFD3</color>
     <color name="backgroundColor">#FFF7CC</color>
     <color name="textcolor">#000000</color>
+    <color name="button_text">#FFFFFF</color>
 </resources>

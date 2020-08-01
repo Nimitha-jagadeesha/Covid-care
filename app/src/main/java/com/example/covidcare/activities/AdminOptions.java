@@ -1,5 +1,6 @@
 package com.example.covidcare.activities;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -45,6 +46,8 @@ public class AdminOptions extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void bindViews() {
@@ -57,8 +60,10 @@ public class AdminOptions extends AppCompatActivity {
 
     public void onClickAdd(View v)
     {
+        String phoneNumber="+91"+phoneNumberEditText.getText().toString();
         DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference().child("admin");
-        databaseReference.child(phoneNumberEditText.getText().toString()).setValue(new UsersData(true,phoneNumberEditText.getText().toString()));
+        databaseReference.child(phoneNumber).setValue(new UsersData(true,phoneNumber));
+        Toast.makeText(this,"Successfully added",Toast.LENGTH_SHORT).show();
     }
 
     public void onClickUpdate(View v) {

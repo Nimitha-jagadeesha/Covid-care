@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     HospitalsAdaptor adaptor;
     ProgressBar progressBar;
     ProgressBar progressBarAdminCheck;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    startActivity(new Intent(MainActivity.this,AdminActivity.class));
+                    startActivity(new Intent(MainActivity.this, AdminActivity.class));
                     progressBarAdminCheck.setVisibility(View.GONE);
                     finish();
                 }
@@ -215,8 +216,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
             startActivity(intent);
-
-        }
+        } else if (id == R.id.settings) {
+            startActivity(new Intent(this, Settings.class));
+        } else if (id == R.id.about)
+            startActivity(new Intent(this, About.class));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -303,6 +306,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adaptor = new HospitalsAdaptor(this);
         recyclerViewHospitalList.setAdapter(adaptor);
         progressBar = findViewById(R.id.progressbar);
-        progressBarAdminCheck=findViewById(R.id.progressbar_admin);
+        progressBarAdminCheck = findViewById(R.id.progressbar_admin);
     }
 }

@@ -187,7 +187,10 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             } catch (Exception e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
-        }
+        }else if (id == R.id.settings) {
+            startActivity(new Intent(this, Settings.class));
+        } else if (id == R.id.about)
+            startActivity(new Intent(this, About.class));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
