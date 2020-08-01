@@ -4,20 +4,32 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_marginTop="60dp">
+    android:layout_marginTop="55dp"
+    android:background="@color/backgroundColor">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Cases in India"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        <ProgressBar
+            android:id="@+id/progressbar_admin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
 
-    <LinearLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/cookie_regular"
+            android:text="@string/cases_in_india"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/colorPrimary"
+            android:textColorHighlight="@color/colorAccent"
+            android:textSize="40sp" />
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -26,6 +38,8 @@
             android:layout_width="0px"
             android:layout_height="100dp"
             android:layout_margin="10dp"
+            app:cardElevation="50dp"
+            app:cardCornerRadius="10dp"
             app:cardBackgroundColor="@color/colorPrimary"
             android:layout_weight="1">
 
@@ -44,6 +58,8 @@
             android:layout_width="0px"
             android:layout_height="100dp"
             android:layout_margin="10dp"
+            app:cardElevation="50dp"
+            app:cardCornerRadius="10dp"
             app:cardBackgroundColor="#32CD32"
             android:layout_weight="1">
 
@@ -62,6 +78,8 @@
             android:layout_width="0px"
             android:layout_height="100dp"
             android:layout_margin="10dp"
+            app:cardElevation="50dp"
+            app:cardCornerRadius="10dp"
             app:cardBackgroundColor="#FF0000"
             android:layout_weight="1">
 
@@ -83,7 +101,10 @@
             android:gravity="center"
             android:layout_margin="10dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:text="Hospitals Information"/>
+            android:fontFamily="@font/cookie_regular"
+            android:textSize="40sp"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/hospitals_information"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -93,13 +114,17 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/ShapeAppearance.MaterialComponents.MediumComponent"
+            android:textSize="20sp"
+            android:textStyle="bold"
             android:text="@string/region" />
 
         <Spinner
             android:id="@+id/selectStatesSpinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            />
     </LinearLayout>
         <ProgressBar
             android:id="@+id/progressbar"

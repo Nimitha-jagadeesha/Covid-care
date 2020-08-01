@@ -77,7 +77,7 @@ public class AdminOptions extends AppCompatActivity {
         hospitalName = hospitalName.toLowerCase();
         databaseReference.child(selectedRegion).child(hospitalName).setValue(new HospitalData(NumberOfBeds, hospitalName,selectedRegion));
         if(!selectedRegion.equals("INDIA"))
-            databaseReference.child("INDIA").child(hospitalName+"("+selectedRegion+")").setValue(new HospitalData(NumberOfBeds, hospitalName+"("+selectedRegion+")",selectedRegion));
+            databaseReference.child("INDIA").child(hospitalName+" ("+selectedRegion+") ").setValue(new HospitalData(NumberOfBeds, hospitalName+" ("+selectedRegion+") ",selectedRegion));
         Toast.makeText(this, "Updated", Toast.LENGTH_LONG).show();
     }
 }

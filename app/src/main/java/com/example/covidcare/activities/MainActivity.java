@@ -65,14 +65,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RecyclerView recyclerViewHospitalList;
     HospitalsAdaptor adaptor;
     ProgressBar progressBar;
-    boolean check=false;
+    ProgressBar progressBarAdminCheck;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         setContentView(R.layout.activity_main);
         bindViews();
+
+        progressBarAdminCheck.setVisibility(View.VISIBLE);
+        // check if admin
         isAdmin();
+        progressBarAdminCheck.setVisibility(View.GONE);
+
+        //Get data
         getData();
 
         // Navigation Drawer
@@ -118,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void isAdmin() {
-
+        progressBarAdminCheck.setVisibility(View.VISIBLE);
         Query query = FirebaseDatabase.getInstance().getReference("admin")
                 .orderByChild("phoneNumber")
                 .equalTo(mAuth.getCurrentUser().getPhoneNumber());
@@ -127,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     startActivity(new Intent(MainActivity.this,AdminActivity.class));
+                    progressBarAdminCheck.setVisibility(View.GONE);
                     finish();
                 }
             }
@@ -137,14 +144,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
         query.addListenerForSingleValueEvent(valueEventListener);
+        progressBarAdminCheck.setVisibility(View.INVISIBLE);
+
     }
 
     // Event listener of Query
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            progressBar.setVisibility(View.VISIBLE);
+
             recyclerViewHospitalList.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
             HospitalExpert.clearListData();
             if (dataSnapshot.exists()) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -152,10 +162,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     HospitalExpert.addHospitalData(hosdata);
                 }
                 adaptor.notifyDataSetChanged();
-
+                progressBar.setVisibility(View.GONE);
 
             }
-            progressBar.setVisibility(View.INVISIBLE);
             recyclerViewHospitalList.setVisibility(View.VISIBLE);
         }
 
@@ -217,46 +226,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // To get all states from API for spinner and live Corona Updates for cards
     private void getData() {
 
-        //To get All states
+        //GET request to get all states
         StateExpert.clearAllStates();
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 URLExpert.getAllStates(),
                 null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        parseData(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        VolleyErrorHandle.handleError(error, getApplicationContext());
-                    }
-                }
+                this::parseData,
+                error -> VolleyErrorHandle.handleError(error, getApplicationContext())
         );
 
         NetworkQueueSingleton.geInstance(this).addToRequestQueue(request);
 
-        // To get corona updates
+        // GET request to get corona updates
         JsonObjectRequest cases = new JsonObjectRequest(
                 Request.Method.GET,
                 URLExpert.getTotalCoronaCases(),
                 null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        parseCasesData(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        VolleyErrorHandle.handleError(error, getApplicationContext());
-                    }
-                }
+                this::parseCasesData,
+                error -> VolleyErrorHandle.handleError(error, getApplicationContext())
         );
 
         NetworkQueueSingleton.geInstance(this).addToRequestQueue(cases);
@@ -314,5 +303,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adaptor = new HospitalsAdaptor(this);
         recyclerViewHospitalList.setAdapter(adaptor);
         progressBar = findViewById(R.id.progressbar);
+        progressBarAdminCheck=findViewById(R.id.progressbar_admin);
     }
 }

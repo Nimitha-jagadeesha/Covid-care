@@ -20,6 +20,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:background="@color/backgroundColor"
+        app:itemTextColor="@color/textcolor"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/admin_nav_drawer" />
 

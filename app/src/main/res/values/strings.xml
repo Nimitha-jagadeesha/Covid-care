@@ -33,4 +33,6 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="admin_options">Admin Options</string>
+    <string name="hospitals_information">Hospitals Information</string>
+    <string name="cases_in_india">Cases in India</string>
 </resources>

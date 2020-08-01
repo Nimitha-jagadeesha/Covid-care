@@ -68,7 +68,6 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         setContentView(R.layout.activity_admin);
 
-
         bindViews();
         getData();
 
@@ -130,7 +129,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
 
             }
-            progressBar.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.GONE);
             recyclerViewHospitalList.setVisibility(View.VISIBLE);
         }
 
@@ -195,49 +194,29 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         return true;
     }
 
-    // To get all states from API for spinner and live Corona Updates for cards
+
     private void getData() {
 
-        //To get All states
+        //GET request get all states
         StateExpert.clearAllStates();
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 URLExpert.getAllStates(),
                 null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        parseData(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        VolleyErrorHandle.handleError(error, getApplicationContext());
-                    }
-                }
+                this::parseData,
+                error -> VolleyErrorHandle.handleError(error, getApplicationContext())
         );
 
         NetworkQueueSingleton.geInstance(this).addToRequestQueue(request);
 
-        // To get corona updates
+        // GET request to get corona updates
         JsonObjectRequest cases = new JsonObjectRequest(
                 Request.Method.GET,
                 URLExpert.getTotalCoronaCases(),
                 null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        parseCasesData(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        VolleyErrorHandle.handleError(error, getApplicationContext());
-                    }
-                }
+                this::parseCasesData,
+                error -> VolleyErrorHandle.handleError(error, getApplicationContext())
         );
 
         NetworkQueueSingleton.geInstance(this).addToRequestQueue(cases);
