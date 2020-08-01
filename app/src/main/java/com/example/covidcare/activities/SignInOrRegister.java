@@ -25,7 +25,6 @@ import java.util.List;
 public class SignInOrRegister extends AppCompatActivity {
     FirebaseAuth mAuth;
     int AUTH_UI_REQUEST_CODE = 10001;
-    static boolean isAdmin=false;
     DatabaseReference databaseUsers;
 
     @Override

@@ -6,6 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,10 +16,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -26,10 +32,20 @@ import com.example.covidcare.R;
 import com.example.covidcare.Utility.NetworkQueueSingleton;
 import com.example.covidcare.Utility.URLExpert;
 import com.example.covidcare.Utility.VolleyErrorHandle;
+import com.example.covidcare.adaptors.HospitalsAdaptor;
+import com.example.covidcare.dataexpert.HospitalExpert;
 import com.example.covidcare.dataexpert.StateExpert;
+import com.example.covidcare.models.HospitalData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,14 +57,22 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     TextView conformedCasesTextView;
     TextView RecoveredCasesTextView;
     TextView DeathCasesTextView;
+    DatabaseReference databaseHospitalData;
+    RecyclerView recyclerViewHospitalList;
+    HospitalsAdaptor adaptor;
+    ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-        mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_admin);
+
+
         bindViews();
         getData();
+
+        // Navigation Drawer
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -58,6 +82,8 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // To send supporting mail from fab
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,15 +95,53 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             }
         });
 
+        // onSelect function of Spinner
+        selectStateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                HospitalExpert.clearListData();
+                Object item = parent.getItemAtPosition(position);
+                Query query;
+                query = FirebaseDatabase.getInstance().getReference("data/" + item.toString());
+                query.addListenerForSingleValueEvent(valueEventListener);
+                adaptor.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
-    private void bindViews() {
-        selectStateSpinner = findViewById(R.id.selectStatesSpinner);
-        conformedCasesTextView=findViewById(R.id.Confirmed_cases);
-        RecoveredCasesTextView=findViewById(R.id.RecoveredCases);
-        DeathCasesTextView=findViewById(R.id.DeathCases);
-    }
+    // Event listener of Query
+    ValueEventListener valueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            progressBar.setVisibility(View.VISIBLE);
+            recyclerViewHospitalList.setVisibility(View.INVISIBLE);
+            HospitalExpert.clearListData();
+            if (dataSnapshot.exists()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    HospitalData hosdata = snapshot.getValue(HospitalData.class);
+                    HospitalExpert.addHospitalData(hosdata);
+                }
+                adaptor.notifyDataSetChanged();
 
+
+            }
+            progressBar.setVisibility(View.INVISIBLE);
+            recyclerViewHospitalList.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+
+    };
+
+    //On back press of navigation drawer
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -89,6 +153,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     }
 
 
+    // OnSelect function of navigation Drawer
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -130,50 +195,57 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         return true;
     }
 
+    // To get all states from API for spinner and live Corona Updates for cards
     private void getData() {
+
+        //To get All states
         StateExpert.clearAllStates();
 
-            JsonObjectRequest request = new JsonObjectRequest(
-                    Request.Method.GET,
-                    URLExpert.getAllStates(),
-                    null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            parseData(response);
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            VolleyErrorHandle.handleError(error, getApplicationContext());
-                        }
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                URLExpert.getAllStates(),
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        parseData(response);
                     }
-            );
-
-            NetworkQueueSingleton.geInstance(this).addToRequestQueue(request);
-            JsonObjectRequest cases = new JsonObjectRequest(
-                    Request.Method.GET,
-                    URLExpert.getTotalCoronaCases(),
-                    null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            parseCasesData(response);
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            VolleyErrorHandle.handleError(error, getApplicationContext());
-                        }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyErrorHandle.handleError(error, getApplicationContext());
                     }
-            );
+                }
+        );
 
-            NetworkQueueSingleton.geInstance(this).addToRequestQueue(cases);
+        NetworkQueueSingleton.geInstance(this).addToRequestQueue(request);
+
+        // To get corona updates
+        JsonObjectRequest cases = new JsonObjectRequest(
+                Request.Method.GET,
+                URLExpert.getTotalCoronaCases(),
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        parseCasesData(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyErrorHandle.handleError(error, getApplicationContext());
+                    }
+                }
+        );
+
+        NetworkQueueSingleton.geInstance(this).addToRequestQueue(cases);
 
     }
 
+
+    // Parsing response to get states
     private void parseData(JSONObject response) {
 
         try {
@@ -194,17 +266,34 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             e.printStackTrace();
         }
     }
+
+
+    // Parsing response to get number of corona cases
     private void parseCasesData(JSONObject response) {
         try {
-            JSONObject cases=response.getJSONObject("confirmed");
-            conformedCasesTextView.setText("Confirmed:\n"+cases.getInt("value"));
-            cases=response.getJSONObject("recovered");
-            RecoveredCasesTextView.setText("Recovered:\n"+cases.getInt("value"));
-            cases=response.getJSONObject("deaths");
-            DeathCasesTextView.setText("Deaths:\n"+cases.getInt("value"));
+            JSONObject cases = response.getJSONObject("confirmed");
+            conformedCasesTextView.setText("Confirmed:\n" + cases.getInt("value"));
+            cases = response.getJSONObject("recovered");
+            RecoveredCasesTextView.setText("Recovered:\n" + cases.getInt("value"));
+            cases = response.getJSONObject("deaths");
+            DeathCasesTextView.setText("Deaths:\n" + cases.getInt("value"));
         } catch (JSONException e) {
-//        e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
+    // To bind all the views
+    private void bindViews() {
+        mAuth = FirebaseAuth.getInstance();
+        selectStateSpinner = findViewById(R.id.selectStatesSpinner);
+        conformedCasesTextView = findViewById(R.id.Confirmed_cases);
+        RecoveredCasesTextView = findViewById(R.id.RecoveredCases);
+        DeathCasesTextView = findViewById(R.id.DeathCases);
+        databaseHospitalData = FirebaseDatabase.getInstance().getReference().child("data");
+        recyclerViewHospitalList = findViewById(R.id.recyclerviewHospitalView);
+        recyclerViewHospitalList.setLayoutManager(new LinearLayoutManager(this));
+        adaptor = new HospitalsAdaptor(this);
+        recyclerViewHospitalList.setAdapter(adaptor);
+        progressBar = findViewById(R.id.progressbar);
+    }
 }

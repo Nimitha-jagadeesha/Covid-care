@@ -2,21 +2,21 @@ package com.example.covidcare.models;
 
 public class UsersData {
     private boolean admin;
-    private String id;
+    private String phoneNumber;
 
     public UsersData() {
     }
 
-    public UsersData(boolean admin, String id) {
-        this.admin = admin;
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public boolean getAdmin() {
+    public boolean isAdmin() {
         return admin;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public UsersData(boolean admin, String phoneNumber) {
+        this.admin = admin;
+        this.phoneNumber = phoneNumber;
     }
 }

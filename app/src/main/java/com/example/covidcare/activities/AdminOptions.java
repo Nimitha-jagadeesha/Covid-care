@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.example.covidcare.R;
 import com.example.covidcare.dataexpert.StateExpert;
 import com.example.covidcare.models.HospitalData;
+import com.example.covidcare.models.UsersData;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -22,7 +24,7 @@ public class AdminOptions extends AppCompatActivity {
     String selectedRegion;
     EditText hospitalNameEditText;
     EditText numberOfBedsEditText;
-
+    EditText phoneNumberEditText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,13 @@ public class AdminOptions extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference().child("data");
         hospitalNameEditText = findViewById(R.id.HospitalNameAdminOptions);
         numberOfBedsEditText = findViewById(R.id.BedAvailabilityAdminOptions);
+        phoneNumberEditText=findViewById(R.id.phone_number);
+    }
+
+    public void onClickAdd(View v)
+    {
+        DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference().child("admin");
+        databaseReference.child(phoneNumberEditText.getText().toString()).setValue(new UsersData(true,phoneNumberEditText.getText().toString()));
     }
 
     public void onClickUpdate(View v) {

@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -54,31 +55,27 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+
     FirebaseAuth mAuth;
     Spinner selectStateSpinner;
     TextView conformedCasesTextView;
     TextView RecoveredCasesTextView;
     TextView DeathCasesTextView;
-    DatabaseReference databaseHospitalData ;
+    DatabaseReference databaseHospitalData;
     RecyclerView recyclerViewHospitalList;
     HospitalsAdaptor adaptor;
     ProgressBar progressBar;
+    boolean check=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         setContentView(R.layout.activity_main);
         bindViews();
+        isAdmin();
         getData();
-        mAuth = FirebaseAuth.getInstance();
 
-        //Checking if its admin Account
-        if (mAuth.getCurrentUser() != null && Objects.equals(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), "nimitha1jagadeesha@gmail.com")) {
-            startActivity(new Intent(MainActivity.this, AdminActivity.class));
-            finish();
-        } else if (mAuth.getCurrentUser() == null)
-            startActivity(new Intent(this, SignInOrRegister.class));
-
+        // Navigation Drawer
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -89,33 +86,60 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // To send supporting mail from fab
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "covidCareSupport@gmail.com", null));
+                        "mailto", "healthifySupport@gmail.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Support request");
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
             }
         });
 
+        // onSelect function of Spinner
         selectStateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 HospitalExpert.clearListData();
                 Object item = parent.getItemAtPosition(position);
                 Query query;
-                query = FirebaseDatabase.getInstance().getReference("data/"+item.toString());
+                query = FirebaseDatabase.getInstance().getReference("data/" + item.toString());
                 query.addListenerForSingleValueEvent(valueEventListener);
                 adaptor.notifyDataSetChanged();
 
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
+
+    private void isAdmin() {
+
+        Query query = FirebaseDatabase.getInstance().getReference("admin")
+                .orderByChild("phoneNumber")
+                .equalTo(mAuth.getCurrentUser().getPhoneNumber());
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    startActivity(new Intent(MainActivity.this,AdminActivity.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        query.addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    // Event listener of Query
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -142,22 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     };
 
-
-
-    private void bindViews() {
-        selectStateSpinner = findViewById(R.id.selectStatesSpinner);
-        conformedCasesTextView = findViewById(R.id.Confirmed_cases);
-        RecoveredCasesTextView = findViewById(R.id.RecoveredCases);
-        DeathCasesTextView = findViewById(R.id.DeathCases);
-        databaseHospitalData=FirebaseDatabase.getInstance().getReference().child("data");
-        recyclerViewHospitalList=findViewById(R.id.recyclerviewHospitalView);
-        recyclerViewHospitalList.setLayoutManager(new LinearLayoutManager(this));
-        adaptor =new HospitalsAdaptor(this);
-        recyclerViewHospitalList.setAdapter(adaptor);
-        progressBar=findViewById(R.id.progressbar);
-    }
-
-
+    //On back press of navigation drawer
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -169,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    // OnSelect function of navigation Drawer
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -184,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     "Hey check out the app at: https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
-
 
 
         } else if (id == R.id.emergencyCall) {
@@ -205,7 +214,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    // To get all states from API for spinner and live Corona Updates for cards
     private void getData() {
+
+        //To get All states
         StateExpert.clearAllStates();
 
         JsonObjectRequest request = new JsonObjectRequest(
@@ -227,6 +239,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );
 
         NetworkQueueSingleton.geInstance(this).addToRequestQueue(request);
+
+        // To get corona updates
         JsonObjectRequest cases = new JsonObjectRequest(
                 Request.Method.GET,
                 URLExpert.getTotalCoronaCases(),
@@ -249,19 +263,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void parseCasesData(JSONObject response) {
-        try {
-            JSONObject cases = response.getJSONObject("confirmed");
-            conformedCasesTextView.setText("Confirmed:\n" + cases.getInt("value"));
-            cases = response.getJSONObject("recovered");
-            RecoveredCasesTextView.setText("Recovered:\n" + cases.getInt("value"));
-            cases = response.getJSONObject("deaths");
-            DeathCasesTextView.setText("Deaths:\n" + cases.getInt("value"));
-        } catch (JSONException e) {
-//        e.printStackTrace();
-        }
-    }
 
+    // Parsing response to get states
     private void parseData(JSONObject response) {
 
         try {
@@ -281,5 +284,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+
+    // Parsing response to get number of corona cases
+    private void parseCasesData(JSONObject response) {
+        try {
+            JSONObject cases = response.getJSONObject("confirmed");
+            conformedCasesTextView.setText("Confirmed:\n" + cases.getInt("value"));
+            cases = response.getJSONObject("recovered");
+            RecoveredCasesTextView.setText("Recovered:\n" + cases.getInt("value"));
+            cases = response.getJSONObject("deaths");
+            DeathCasesTextView.setText("Deaths:\n" + cases.getInt("value"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // To bind all the views
+    private void bindViews() {
+        mAuth = FirebaseAuth.getInstance();
+        selectStateSpinner = findViewById(R.id.selectStatesSpinner);
+        conformedCasesTextView = findViewById(R.id.Confirmed_cases);
+        RecoveredCasesTextView = findViewById(R.id.RecoveredCases);
+        DeathCasesTextView = findViewById(R.id.DeathCases);
+        databaseHospitalData = FirebaseDatabase.getInstance().getReference().child("data");
+        recyclerViewHospitalList = findViewById(R.id.recyclerviewHospitalView);
+        recyclerViewHospitalList.setLayoutManager(new LinearLayoutManager(this));
+        adaptor = new HospitalsAdaptor(this);
+        recyclerViewHospitalList.setAdapter(adaptor);
+        progressBar = findViewById(R.id.progressbar);
     }
 }
