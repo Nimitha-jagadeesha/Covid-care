@@ -35,7 +35,7 @@
                     android:textColor="@color/textcolor"
                     android:textStyle="bold"
                     android:layout_margin="10dp"
-                    android:text="Add or delete admin"
+                    android:text="@string/add_or_delete_admin"
                     />
 
                 <EditText
@@ -197,7 +197,7 @@
                     android:fontFamily="@font/cookie_regular"
                     android:gravity="center"
                     android:textSize="30sp"
-                    android:text="Delete Hospital detail"/>
+                    android:text="@string/delete_hospital_detail"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

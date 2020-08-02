@@ -40,7 +40,7 @@ public class Emergency extends AppWidgetProvider {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
 
-        
+
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.emergency);
         String s = "tel:1075";
         Intent intent = new Intent(Intent.ACTION_CALL);
