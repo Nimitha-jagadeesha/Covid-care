@@ -1,8 +1,10 @@
 package com.example.covidcare.activities;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -131,6 +133,7 @@ public class AdminOptions extends AppCompatActivity {
             databaseReference.child("INDIA").child(hospitalName + " (" + selectedRegionToAdd + ") ").setValue(new HospitalData(NumberOfBeds, hospitalName + " (" + selectedRegionToAdd + ") ", address, selectedRegionToAdd));
         hospitalNameToUpdateEditText.setText("");
         numberOfBedsEditText.setText("");
+        addressEditText.setText("");
         if (StateExpert.getSize() != 0) {
             selectRegionToAddSpinner.setSelection(0);
         }
@@ -143,29 +146,69 @@ public class AdminOptions extends AppCompatActivity {
             NumberOrEmailEditText.setError("This field cannot be empty");
             return;
         }
-        Query query = FirebaseDatabase.getInstance().getReference("admin")
-                .orderByChild("emailOrNumber")
-                .equalTo(data);
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        UsersData userData = snapshot.getValue(UsersData.class);
-                        FirebaseDatabase.getInstance().getReference().child("admin/" + userData.getId()).removeValue();
-                        Toast.makeText(AdminOptions.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                } else
-                    Toast.makeText(AdminOptions.this, "Specified admin doesn't exist", Toast.LENGTH_SHORT).show();
-            }
+        AlertDialog.Builder builder = new AlertDialog.Builder(AdminOptions.this);
+        builder.setMessage("Are you sure to remove the admin privileges of the user " + data);
+        builder.setTitle("Alert !");
+        builder.setCancelable(false);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        builder
+                .setPositiveButton(
+                        "Yes",
+                        new DialogInterface
+                                .OnClickListener() {
 
-            }
-        };
-        query.addListenerForSingleValueEvent(valueEventListener);
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+
+                                Query query = FirebaseDatabase.getInstance().getReference("admin")
+                                        .orderByChild("emailOrNumber")
+                                        .equalTo(data);
+                                ValueEventListener valueEventListener = new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                UsersData userData = snapshot.getValue(UsersData.class);
+                                                FirebaseDatabase.getInstance().getReference().child("admin/" + userData.getId()).removeValue();
+                                                NumberOrEmailEditText.setText("");
+                                                Toast.makeText(AdminOptions.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                        } else
+                                            Toast.makeText(AdminOptions.this, "Specified admin doesn't exist", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                };
+                                query.addListenerForSingleValueEvent(valueEventListener);
+                            }
+                        });
+
+        // Set the Negative button
+        builder
+                .setNegativeButton(
+                        "No",
+                        new DialogInterface
+                                .OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+
+                                // If user click no then dialog box is canceled.
+                                dialog.cancel();
+                            }
+                        });
+
+        // Create the Alert dialog
+        AlertDialog alertDialog = builder.create();
+
+        // Show the Alert Dialog box
+        alertDialog.show();
 
     }
 
@@ -176,29 +219,75 @@ public class AdminOptions extends AppCompatActivity {
             return;
         }
 
-        Query query = databaseReference.child(selectedRegionToDelete).child(hospitalName);
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    databaseReference.child(selectedRegionToDelete).child(hospitalName).removeValue();
-                    if (!selectedRegionToDelete.equals("INDIA"))
-                        databaseReference.child("INDIA").child(hospitalName + " (" + selectedRegionToAdd + ") ").removeValue();
-                    hospitalNameToDeleteEditText.setText("");
-                    if (StateExpert.getSize() != 0) {
-                        selectRegionToDeleteSpinner.setSelection(0);
-                    }
-                    Toast.makeText(AdminOptions.this, "Successfully deleted hospital information", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(AdminOptions.this, "Specified hospital doesn't exist", Toast.LENGTH_SHORT).show();
-            }
+        AlertDialog.Builder builder = new AlertDialog.Builder(AdminOptions.this);
+        builder.setMessage("Are you sure to delete the details of " +hospitalName+" in "+selectedRegionToDelete );
+        builder.setTitle("Alert !");
+        builder.setCancelable(false);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        };
-        query.addListenerForSingleValueEvent(valueEventListener);
+        builder
+                .setPositiveButton(
+                        "Yes",
+                        new DialogInterface
+                                .OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which)
+                            {
+
+                                Query query = databaseReference.child(selectedRegionToDelete).child(hospitalName);
+                                ValueEventListener valueEventListener = new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            databaseReference.child(selectedRegionToDelete).child(hospitalName).removeValue();
+                                            if (!selectedRegionToDelete.equals("INDIA"))
+                                                databaseReference.child("INDIA").child(hospitalName + " (" + selectedRegionToAdd + ") ").removeValue();
+                                            hospitalNameToDeleteEditText.setText("");
+                                            if (StateExpert.getSize() != 0) {
+                                                selectRegionToDeleteSpinner.setSelection(0);
+                                            }
+                                            selectRegionToAddSpinner.setSelection(0);
+                                            hospitalNameToDeleteEditText.setText("");
+
+                                            Toast.makeText(AdminOptions.this, "Successfully deleted hospital information", Toast.LENGTH_SHORT).show();
+                                        } else
+                                            Toast.makeText(AdminOptions.this, "Specified hospital doesn't exist", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                };
+                                query.addListenerForSingleValueEvent(valueEventListener);
+                            }
+                        });
+
+        // Set the Negative button
+        builder
+                .setNegativeButton(
+                        "No",
+                        new DialogInterface
+                                .OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which)
+                            {
+
+                                // If user click no
+                                // then dialog box is canceled.
+                                dialog.cancel();
+                            }
+                        });
+
+        // Create the Alert dialog
+        AlertDialog alertDialog = builder.create();
+
+        // Show the Alert Dialog box
+        alertDialog.show();
 
     }
 }
