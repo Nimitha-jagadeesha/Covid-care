@@ -24,4 +24,6 @@
     <string name="update_bed_availability_details"><u>Update bed availability details</u></string>
     <string name="dark_mode">Dark Mode</string>
     <string name="log_out">Log Out</string>
+    <string name="address">Address:</string>
+    <string name="delete">Delete</string>
 </resources>

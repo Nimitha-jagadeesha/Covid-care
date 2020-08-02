@@ -32,6 +32,8 @@ public class HospitalsAdaptor extends RecyclerView.Adapter<HospitalsAdaptor.View
         textView.setText("Hospital Name: "+HospitalExpert.getHospitalName(position));
         TextView textViewNumberOfBeds=view.findViewById(R.id.numberOfBeds);
         textViewNumberOfBeds.setText("Number Of Beds :"+HospitalExpert.getNumberOfBedsAvailable(position));
+        TextView addressTextView=view.findViewById(R.id.addressTextView);
+        addressTextView.setText("Address: "+HospitalExpert.getHospitalAddress(position));
     }
 
     @Override

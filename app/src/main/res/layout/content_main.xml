@@ -107,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:fontFamily="@font/cookie_regular"
+            android:fontFamily="@font/tangerine_bold"
             android:gravity="center"
             android:text="@string/hospitals_information"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"

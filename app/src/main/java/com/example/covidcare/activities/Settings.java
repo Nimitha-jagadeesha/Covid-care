@@ -67,20 +67,15 @@ public class Settings extends AppCompatActivity {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-        currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    startActivity(new Intent(Settings.this, SignInOrRegister.class));
-                    Toast.makeText(Settings.this,"Account deleted sucessfully",Toast.LENGTH_SHORT).show();
-                    finish();
-                }
+        assert currentUser != null;
+        currentUser.delete().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                startActivity(new Intent(Settings.this, SignInOrRegister.class));
+                Toast.makeText(Settings.this,"Account deleted sucessfully",Toast.LENGTH_SHORT).show();
+                finish();
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+        }).addOnFailureListener(e -> {
 
-            }
         });
     }
 

@@ -126,9 +126,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void isAdmin() {
         progressBarAdminCheck.setVisibility(View.VISIBLE);
+        String data=mAuth.getCurrentUser().getPhoneNumber();
+        if(data==null)
+            data=mAuth.getCurrentUser().getEmail();
+
         Query query = FirebaseDatabase.getInstance().getReference("admin")
-                .orderByChild("phoneNumber")
-                .equalTo(mAuth.getCurrentUser().getPhoneNumber());
+                .orderByChild("emailOrNumber")
+                .equalTo(data);
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

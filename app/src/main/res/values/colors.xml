@@ -3,8 +3,8 @@
     <color name="colorPrimary">#00151A</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#1A001A</color>
-    <color name="cardBackground">#FFFFD3</color>
-    <color name="backgroundColor">#FFF7CC</color>
+    <color name="cardBackground">#F2FFE6</color>
+    <color name="backgroundColor">#EEFFE6</color>
     <color name="textcolor">#000000</color>
     <color name="button_text">#FFFFFF</color>
 </resources>

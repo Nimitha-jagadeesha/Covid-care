@@ -22,4 +22,9 @@ public class HospitalExpert {
     {
         hospitalsAndBedCountList.add(data);
     }
+
+    public  static  String getHospitalAddress(int position)
+    {
+        return hospitalsAndBedCountList.get(position).getAddress();
+    }
 }
