@@ -30,4 +30,5 @@
     <string name="delete_hospital_detail"><u>Delete Hospital detail</u></string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="about_content">\tThis is a app which helps in tracking number of beds available in different hospitals of different places in India.\n\n\tIn continuation to initiative taken by government to help COVID-19 infected patients. We are aiming to give updates about number of beds available in hospitals that treat COVID patients. </string>
 </resources>

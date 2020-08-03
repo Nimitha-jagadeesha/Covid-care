@@ -70,6 +70,10 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         setContentView(R.layout.activity_admin);
 
         bindViews();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+        }
         getData();
 
         // Navigation Drawer

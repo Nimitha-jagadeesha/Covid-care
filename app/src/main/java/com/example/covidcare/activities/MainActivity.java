@@ -83,7 +83,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Get data
         getData();
-
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+        }
         // Navigation Drawer
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -110,7 +112,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                startActivity(new Intent(MainActivity.this,MainActivity.class));
+                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                finish();
                 swipeRefresh.setRefreshing(false);
             }
         });
@@ -136,9 +139,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void isAdmin() {
         progressBarAdminCheck.setVisibility(View.VISIBLE);
-        String data=mAuth.getCurrentUser().getPhoneNumber();
-        if(data==null)
-            data=mAuth.getCurrentUser().getEmail();
+        String data = mAuth.getCurrentUser().getPhoneNumber();
+        if (data == null)
+            data = mAuth.getCurrentUser().getEmail();
 
         Query query = FirebaseDatabase.getInstance().getReference("admin")
                 .orderByChild("emailOrNumber")
@@ -179,9 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 adaptor.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
-            }
-            else
-            {
+            } else {
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-         if (id == R.id.nav_share) {
+        if (id == R.id.nav_share) {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_TEXT,
@@ -321,6 +322,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerViewHospitalList.setAdapter(adaptor);
         progressBar = findViewById(R.id.progressbar);
         progressBarAdminCheck = findViewById(R.id.progressbar_admin);
-        swipeRefresh=findViewById(R.id.swipeRefresh);
+        swipeRefresh = findViewById(R.id.swipeRefresh);
     }
 }

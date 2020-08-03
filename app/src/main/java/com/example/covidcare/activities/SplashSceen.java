@@ -2,9 +2,12 @@ package com.example.covidcare.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -28,9 +31,6 @@ public class SplashSceen extends AppCompatActivity {
             public void run() {
                 Intent i;
                 if (mAuth.getCurrentUser() != null) {
-                    if (Objects.equals(mAuth.getCurrentUser().getEmail(), "nimitha1jagadeesha@gmail.com"))
-                        i = new Intent(SplashSceen.this, AdminActivity.class);
-                    else
                         i = new Intent(SplashSceen.this, MainActivity.class);
                 } else {
                     i = new Intent(SplashSceen.this, SignInOrRegister.class);

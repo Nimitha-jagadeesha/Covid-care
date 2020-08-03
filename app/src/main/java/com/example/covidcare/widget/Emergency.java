@@ -27,7 +27,6 @@ public class Emergency extends AppWidgetProvider {
         CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.emergency);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -42,7 +41,7 @@ public class Emergency extends AppWidgetProvider {
 
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.emergency);
-        String s = "tel:1075";
+        String s = "tel:108";
         Intent intent = new Intent(Intent.ACTION_CALL);
         intent.setData(Uri.parse(s));
         PendingIntent configPendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
