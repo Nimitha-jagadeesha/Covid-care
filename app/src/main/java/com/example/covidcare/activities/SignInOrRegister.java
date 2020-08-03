@@ -52,7 +52,7 @@ public class SignInOrRegister extends AppCompatActivity {
                 .setAvailableProviders(provider)
                 .setTosAndPrivacyPolicyUrls("https://example.com", "https://example.com")
                 .setAlwaysShowSignInMethodScreen(true)
-                .setLogo(R.mipmap.ic_launcher)
+                .setLogo(R.mipmap.app_launcher_icon)
                 .build();
         startActivityForResult(intent, AUTH_UI_REQUEST_CODE);
     }
