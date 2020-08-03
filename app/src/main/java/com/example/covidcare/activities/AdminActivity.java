@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.content.Intent;
@@ -61,7 +62,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     RecyclerView recyclerViewHospitalList;
     HospitalsAdaptor adaptor;
     ProgressBar progressBar;
-
+    SwipeRefreshLayout swipeRefresh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +95,16 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             }
         });
 
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+               startActivity(new Intent(AdminActivity.this,MainActivity.class));
+               finish();
+                swipeRefresh.setRefreshing(false);
+            }
+        });
+
         // onSelect function of Spinner
         selectStateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -117,18 +128,20 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            progressBar.setVisibility(View.VISIBLE);
+
             recyclerViewHospitalList.setVisibility(View.INVISIBLE);
             HospitalExpert.clearListData();
             if (dataSnapshot.exists()) {
+                progressBar.setVisibility(View.VISIBLE);
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     HospitalData hosdata = snapshot.getValue(HospitalData.class);
                     HospitalExpert.addHospitalData(hosdata);
                 }
                 adaptor.notifyDataSetChanged();
-
+                progressBar.setVisibility(View.GONE);
 
             }
+            else
             progressBar.setVisibility(View.GONE);
             recyclerViewHospitalList.setVisibility(View.VISIBLE);
         }
@@ -272,5 +285,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         adaptor = new HospitalsAdaptor(this);
         recyclerViewHospitalList.setAdapter(adaptor);
         progressBar = findViewById(R.id.progressbar);
+        swipeRefresh=findViewById(R.id.swipeRefresh);
+
     }
 }

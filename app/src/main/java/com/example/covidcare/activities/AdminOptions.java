@@ -98,6 +98,7 @@ public class AdminOptions extends AppCompatActivity {
             String id = FirebaseDatabase.getInstance().getReference().push().getKey();
             assert id != null;
             databaseReference.child(id).setValue(new UsersData(data, id));
+            NumberOrEmailEditText.setText("");
             Toast.makeText(this, "Successfully added", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
