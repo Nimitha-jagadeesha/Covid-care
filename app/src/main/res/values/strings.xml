@@ -8,7 +8,7 @@
     <string name="bed_avilability">Bed Availability</string>
     <string name="state">State:</string>
     <string name="update">Update</string>
-    <string name="region">Region :</string>
+    <string name="region">Region : </string>
     <string name="hospital_name_">Hospital Name:</string>
     <string name="number_of_beds">Number Of Beds:</string>
     <string name="covid_care">Call Covid Care</string>
@@ -31,4 +31,8 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="about_content">\tThis is a app which helps in tracking number of beds available in different hospitals of different places in India.\n\n\tIn continuation to initiative taken by government to help COVID-19 infected patients. We are aiming to give updates about number of beds available in hospitals that treat COVID patients. </string>
+    <string name="fui_progress_dialog_signing_up">Creating your shiny new account...</string>
+    <string name="confirmed_n">Confirmed:\n</string>
+    <string name="recovered_n">Recovered:\n</string>
+    <string name="death_n">Death:\n</string>
 </resources>

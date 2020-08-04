@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="#ffffff"
-                android:text="Confirmed:\n" />
+                android:text="@string/confirmed_n" />
 
 
         </androidx.cardview.widget.CardView>
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="#ffffff"
-                android:text="Recovered:\n" />
+                android:text="@string/recovered_n" />
 
 
         </androidx.cardview.widget.CardView>
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="#ffffff"
-                android:text="Death:\n" />
+                android:text="@string/death_n" />
 
 
         </androidx.cardview.widget.CardView>

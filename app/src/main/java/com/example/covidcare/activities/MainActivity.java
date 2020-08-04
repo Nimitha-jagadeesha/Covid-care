@@ -138,9 +138,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void isAdmin() {
+        try{
         progressBarAdminCheck.setVisibility(View.VISIBLE);
         String data = mAuth.getCurrentUser().getPhoneNumber();
-        if (data == null)
+        if (data==null||(data.isEmpty()))
             data = mAuth.getCurrentUser().getEmail();
 
         Query query = FirebaseDatabase.getInstance().getReference("admin")
@@ -162,7 +163,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
         query.addListenerForSingleValueEvent(valueEventListener);
-        progressBarAdminCheck.setVisibility(View.INVISIBLE);
+        progressBarAdminCheck.setVisibility(View.INVISIBLE);}
+        catch (Exception e)
+        {
+            Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
 
     }
 

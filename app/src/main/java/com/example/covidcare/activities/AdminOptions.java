@@ -69,6 +69,7 @@ public class AdminOptions extends AppCompatActivity {
             }
         });
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 

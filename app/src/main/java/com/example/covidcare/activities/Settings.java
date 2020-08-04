@@ -55,6 +55,7 @@ public class Settings extends AppCompatActivity {
             });
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
