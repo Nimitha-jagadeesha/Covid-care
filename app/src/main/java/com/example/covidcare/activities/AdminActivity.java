@@ -63,6 +63,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     HospitalsAdaptor adaptor;
     ProgressBar progressBar;
     SwipeRefreshLayout swipeRefresh;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +94,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             @Override
             public void onClick(View view) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "healthifySupport@gmail.com", null));
+                        "mailto", "covidCareSupport@gmail.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Support request");
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
             }
@@ -103,8 +104,8 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             @Override
             public void onRefresh() {
 
-               startActivity(new Intent(AdminActivity.this,MainActivity.class));
-               finish();
+                startActivity(new Intent(AdminActivity.this, MainActivity.class));
+                finish();
                 swipeRefresh.setRefreshing(false);
             }
         });
@@ -113,12 +114,16 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         selectStateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                HospitalExpert.clearListData();
-                Object item = parent.getItemAtPosition(position);
-                Query query;
-                query = FirebaseDatabase.getInstance().getReference("data/" + item.toString());
-                query.addListenerForSingleValueEvent(valueEventListener);
-                adaptor.notifyDataSetChanged();
+                try {
+                    HospitalExpert.clearListData();
+                    Object item = parent.getItemAtPosition(position);
+                    Query query;
+                    query = FirebaseDatabase.getInstance().getReference("data/" + item.toString());
+                    query.addListenerForSingleValueEvent(valueEventListener);
+                    adaptor.notifyDataSetChanged();
+                } catch (Exception e) {
+                    Toast.makeText(AdminActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
 
             }
 
@@ -132,22 +137,25 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            try {
+                recyclerViewHospitalList.setVisibility(View.INVISIBLE);
+                HospitalExpert.clearListData();
+                if (dataSnapshot.exists()) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        HospitalData hosdata = snapshot.getValue(HospitalData.class);
+                        HospitalExpert.addHospitalData(hosdata);
+                    }
+                    adaptor.notifyDataSetChanged();
+                    progressBar.setVisibility(View.GONE);
 
-            recyclerViewHospitalList.setVisibility(View.INVISIBLE);
-            HospitalExpert.clearListData();
-            if (dataSnapshot.exists()) {
-                progressBar.setVisibility(View.VISIBLE);
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    HospitalData hosdata = snapshot.getValue(HospitalData.class);
-                    HospitalExpert.addHospitalData(hosdata);
-                }
-                adaptor.notifyDataSetChanged();
-                progressBar.setVisibility(View.GONE);
+                } else
+                    progressBar.setVisibility(View.GONE);
+                recyclerViewHospitalList.setVisibility(View.VISIBLE);
 
+            } catch (Exception e) {
+                //Toast.makeText(AdminActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-            else
-            progressBar.setVisibility(View.GONE);
-            recyclerViewHospitalList.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -199,7 +207,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             } catch (Exception e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
-        }else if (id == R.id.settings) {
+        } else if (id == R.id.settings) {
             startActivity(new Intent(this, Settings.class));
         } else if (id == R.id.about)
             startActivity(new Intent(this, About.class));
@@ -289,7 +297,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         adaptor = new HospitalsAdaptor(this);
         recyclerViewHospitalList.setAdapter(adaptor);
         progressBar = findViewById(R.id.progressbar);
-        swipeRefresh=findViewById(R.id.swipeRefresh);
+        swipeRefresh = findViewById(R.id.swipeRefresh);
 
     }
 }

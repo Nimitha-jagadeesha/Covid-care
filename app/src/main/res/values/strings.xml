@@ -35,4 +35,6 @@
     <string name="confirmed_n">Confirmed:\n</string>
     <string name="recovered_n">Recovered:\n</string>
     <string name="death_n">Death:\n</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="phone_number_">Phone Number :</string>
 </resources>

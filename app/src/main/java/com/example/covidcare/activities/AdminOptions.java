@@ -37,6 +37,7 @@ public class AdminOptions extends AppCompatActivity {
     EditText numberOfBedsEditText;
     EditText NumberOrEmailEditText;
     EditText addressEditText;
+    EditText phoneNumberEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class AdminOptions extends AppCompatActivity {
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectRegionToAddSpinner.setAdapter(arrayAdapter);
         selectRegionToDeleteSpinner.setAdapter(arrayAdapter);
+        phoneNumberEditText = findViewById(R.id.phone_number_admin_options);
     }
 
     public void onClickAdd(View v) {
@@ -112,6 +114,7 @@ public class AdminOptions extends AppCompatActivity {
         String hospitalName = hospitalNameToUpdateEditText.getText().toString().trim();
         String numberOfBeds = numberOfBedsEditText.getText().toString().trim();
         String address = addressEditText.getText().toString().trim();
+        String phoneNumber = phoneNumberEditText.getText().toString().trim();
         if (hospitalName.isEmpty()) {
             hospitalNameToUpdateEditText.setError("This field cannot be empty");
             return;
@@ -124,18 +127,23 @@ public class AdminOptions extends AppCompatActivity {
             addressEditText.setError("This field cannot be empty");
             return;
         }
+        if (phoneNumber.isEmpty()) {
+            phoneNumberEditText.setError("This field cannot be empty");
+            return;
+        }
 
-        addToDatabase(hospitalName, numberOfBeds, address);
+        addToDatabase(hospitalName, numberOfBeds, address, phoneNumber);
     }
 
-    private void addToDatabase(String hospitalName, String NumberOfBeds, String address) {
+    private void addToDatabase(String hospitalName, String NumberOfBeds, String address, String phoneNumber) {
         hospitalName = hospitalName.toLowerCase();
-        databaseReference.child(selectedRegionToAdd).child(hospitalName).setValue(new HospitalData(NumberOfBeds, hospitalName, address, selectedRegionToAdd));
+        databaseReference.child(selectedRegionToAdd).child(hospitalName).setValue(new HospitalData(NumberOfBeds, hospitalName, address, selectedRegionToAdd, phoneNumber));
         if (!selectedRegionToAdd.equals("INDIA"))
-            databaseReference.child("INDIA").child(hospitalName + " (" + selectedRegionToAdd + ") ").setValue(new HospitalData(NumberOfBeds, hospitalName + " (" + selectedRegionToAdd + ") ", address, selectedRegionToAdd));
+            databaseReference.child("INDIA").child(hospitalName + " (" + selectedRegionToAdd + ") ").setValue(new HospitalData(NumberOfBeds, hospitalName + " (" + selectedRegionToAdd + ") ", address, selectedRegionToAdd, phoneNumber));
         hospitalNameToUpdateEditText.setText("");
         numberOfBedsEditText.setText("");
         addressEditText.setText("");
+        phoneNumberEditText.setText("");
         if (StateExpert.getSize() != 0) {
             selectRegionToAddSpinner.setSelection(0);
         }
@@ -222,7 +230,7 @@ public class AdminOptions extends AppCompatActivity {
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(AdminOptions.this);
-        builder.setMessage("Are you sure to delete the details of " +hospitalName+" in "+selectedRegionToDelete );
+        builder.setMessage("Are you sure to delete the details of " + hospitalName + " in " + selectedRegionToDelete);
         builder.setTitle("Alert !");
         builder.setCancelable(false);
 
@@ -235,8 +243,7 @@ public class AdminOptions extends AppCompatActivity {
 
                             @Override
                             public void onClick(DialogInterface dialog,
-                                                int which)
-                            {
+                                                int which) {
 
                                 Query query = databaseReference.child(selectedRegionToDelete).child(hospitalName);
                                 ValueEventListener valueEventListener = new ValueEventListener() {
@@ -245,7 +252,7 @@ public class AdminOptions extends AppCompatActivity {
                                         if (dataSnapshot.exists()) {
                                             databaseReference.child(selectedRegionToDelete).child(hospitalName).removeValue();
                                             if (!selectedRegionToDelete.equals("INDIA"))
-                                                databaseReference.child("INDIA").child(hospitalName + " (" + selectedRegionToAdd + ") ").removeValue();
+                                                databaseReference.child("INDIA").child(hospitalName + " (" + selectedRegionToDelete + ") ").removeValue();
                                             hospitalNameToDeleteEditText.setText("");
                                             if (StateExpert.getSize() != 0) {
                                                 selectRegionToDeleteSpinner.setSelection(0);
@@ -276,8 +283,7 @@ public class AdminOptions extends AppCompatActivity {
 
                             @Override
                             public void onClick(DialogInterface dialog,
-                                                int which)
-                            {
+                                                int which) {
 
                                 // If user click no
                                 // then dialog box is canceled.

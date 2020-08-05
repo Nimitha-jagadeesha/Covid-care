@@ -51,6 +51,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.Objects;
 
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "covidcareSupport@gmail.com", null));
+                        "mailto", "covidCareSupport@gmail.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Support request");
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
             }
@@ -122,13 +123,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         selectStateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                HospitalExpert.clearListData();
-                Object item = parent.getItemAtPosition(position);
-                Query query;
-                query = FirebaseDatabase.getInstance().getReference("data/" + item.toString());
-                query.addListenerForSingleValueEvent(valueEventListener);
-                adaptor.notifyDataSetChanged();
-
+                try {
+                    HospitalExpert.clearListData();
+                    Object item = parent.getItemAtPosition(position);
+                    Query query;
+                    query = FirebaseDatabase.getInstance().getReference("data/" + item.toString());
+                    query.addListenerForSingleValueEvent(valueEventListener);
+                    adaptor.notifyDataSetChanged();
+                }
+                catch (Exception e){
+                    //Toast.makeText(MainActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
