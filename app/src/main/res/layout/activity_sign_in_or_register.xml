@@ -55,7 +55,7 @@
                 android:padding="15dp"
                 android:text="@string/sign_in_register"
                 android:textAlignment="center"
-                android:onClick="onClickSigniInOrRegister"
+                android:onClick="onClickSignInOrRegister"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:background="#3700B3"
                 android:textColor="#ffffff" />

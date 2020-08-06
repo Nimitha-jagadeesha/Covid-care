@@ -32,9 +32,13 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        //Binding all Views
         bindViews();
 
+        // setting earlier settings of darkmode in switch
         switchSetting.setChecked(checked);
+
+        // Setting onChange listener for switch of darkMode
         if (switchSetting != null)
             switchSetting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -54,24 +58,33 @@ public class Settings extends AppCompatActivity {
                 }
             });
 
+
+        //Setting actionBar to enable back button
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+
+    // Onclick fuction of logOut
     public void onClickLogOut(View v) {
         FirebaseAuth.getInstance().signOut();
         finish();
         startActivity(new Intent(this, SignInOrRegister.class));
     }
 
+
+    // Onclick listener of Delete Account
     public void onClickDeleteAccount(View v) {
 
+        // Asking alert in order to ensure user wants to delete his account
         AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
+        builder.setTitle("Alert!");
         builder.setMessage("Do you want to delete?");
         builder.setCancelable(false);
 
         builder
+                //Set the Positive button
                 .setPositiveButton(
                         "Yes",
                         (dialog, which) -> {
@@ -108,6 +121,7 @@ public class Settings extends AppCompatActivity {
         alertDialog.show();
     }
 
+    // Saving the mode setting in shared preferences
     private void saveSettings(boolean bool) {
         SharedPreferences sharedPreferences = getSharedPreferences("CovidCareSettings", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -115,6 +129,7 @@ public class Settings extends AppCompatActivity {
         editor.apply();
     }
 
+    //Bind Views function
     private void bindViews() {
         switchSetting = findViewById(R.id.modeSwitch);
     }

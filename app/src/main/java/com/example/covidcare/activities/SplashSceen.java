@@ -24,8 +24,14 @@ public class SplashSceen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_sceen);
+
+        //Getting current User
         mAuth = FirebaseAuth.getInstance();
+
+        // Loading Mode settings
         loadSettings();
+
+        // In order to make spash screeen visible for 0.5 sec and start MAinActivity / SignInActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -42,6 +48,8 @@ public class SplashSceen extends AppCompatActivity {
         }, 500);
     }
 
+
+    // Fetching settings from shared preference and setting that mode.
     private void loadSettings() {
 
         SharedPreferences sharedPreferences=getSharedPreferences("CovidCareSettings",MODE_PRIVATE);

@@ -70,11 +70,15 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         setContentView(R.layout.activity_admin);
 
+        //Binding all Views
         bindViews();
 
+        //To get call permission if not given
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
         }
+
+        //To get Data via API's
         getData();
 
         // Navigation Drawer
@@ -88,6 +92,8 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+
         // To send supporting mail from fab
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +106,8 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             }
         });
 
+
+        //Setting refresh listener for the activity
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -109,6 +117,8 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 swipeRefresh.setRefreshing(false);
             }
         });
+
+
 
         // onSelect function of Spinner
         selectStateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -133,7 +143,9 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         });
     }
 
-    // Event listener of Query
+
+
+    // Event listener of Query to get hospital data
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -143,8 +155,8 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 if (dataSnapshot.exists()) {
                     progressBar.setVisibility(View.VISIBLE);
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        HospitalData hosdata = snapshot.getValue(HospitalData.class);
-                        HospitalExpert.addHospitalData(hosdata);
+                        HospitalData hospitalData = snapshot.getValue(HospitalData.class);
+                        HospitalExpert.addHospitalData(hospitalData);
                     }
                     adaptor.notifyDataSetChanged();
                     progressBar.setVisibility(View.GONE);
@@ -164,6 +176,8 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         }
 
     };
+
+
 
     //On back press of navigation drawer
     @Override
@@ -216,6 +230,8 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 
 
     private void getData() {

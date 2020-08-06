@@ -43,9 +43,12 @@ public class AdminOptions extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_options);
+
+        //Binding all Views
         bindViews();
 
 
+        // Setting On Clicklistener for items in AddSpinner
         selectRegionToAddSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -58,6 +61,7 @@ public class AdminOptions extends AppCompatActivity {
             }
         });
 
+        // Setting On Clicklistener for items in DeleteSpinner
         selectRegionToDeleteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -74,6 +78,8 @@ public class AdminOptions extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+
+    //BindViews function
     private void bindViews() {
         selectRegionToAddSpinner = findViewById(R.id.selectStatesSpinner);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("data");
@@ -90,6 +96,8 @@ public class AdminOptions extends AppCompatActivity {
         phoneNumberEditText = findViewById(R.id.phone_number_admin_options);
     }
 
+
+    // Onclick function of Add Admin
     public void onClickAdd(View v) {
         try {
             String data = NumberOrEmailEditText.getText().toString();
@@ -109,6 +117,8 @@ public class AdminOptions extends AppCompatActivity {
         }
     }
 
+
+    // OnClick function of Update Hospital Details
     public void onClickUpdate(View v) {
 
         String hospitalName = hospitalNameToUpdateEditText.getText().toString().trim();
@@ -135,6 +145,9 @@ public class AdminOptions extends AppCompatActivity {
         addToDatabase(hospitalName, numberOfBeds, address, phoneNumber);
     }
 
+
+
+    // Adding Hospital details to the firebase database
     private void addToDatabase(String hospitalName, String NumberOfBeds, String address, String phoneNumber) {
         hospitalName = hospitalName.toLowerCase();
         databaseReference.child(selectedRegionToAdd).child(hospitalName).setValue(new HospitalData(NumberOfBeds, hospitalName, address, selectedRegionToAdd, phoneNumber));
@@ -150,6 +163,8 @@ public class AdminOptions extends AppCompatActivity {
         Toast.makeText(this, "Updated", Toast.LENGTH_LONG).show();
     }
 
+
+    // OnClick function of Delete Admin
     public void onClickDeleteAdmin(View v) {
         String data = NumberOrEmailEditText.getText().toString().trim();
         if (data.isEmpty()) {
@@ -162,6 +177,7 @@ public class AdminOptions extends AppCompatActivity {
         builder.setCancelable(false);
 
         builder
+                //Setting positive button
                 .setPositiveButton(
                         "Yes",
                         new DialogInterface
@@ -222,6 +238,8 @@ public class AdminOptions extends AppCompatActivity {
 
     }
 
+
+    // OnClick function to delete a particular Hospital Detalis
     public void onClickDeleteHospital(View v) {
         String hospitalName = hospitalNameToDeleteEditText.getText().toString().trim().toLowerCase();
         if (hospitalName.isEmpty()) {
@@ -229,6 +247,8 @@ public class AdminOptions extends AppCompatActivity {
             return;
         }
 
+
+//      Setting Alert in order to ensure that Admin wants to delete a particular Hospital details
         AlertDialog.Builder builder = new AlertDialog.Builder(AdminOptions.this);
         builder.setMessage("Are you sure to delete the details of " + hospitalName + " in " + selectedRegionToDelete);
         builder.setTitle("Alert !");
@@ -236,6 +256,7 @@ public class AdminOptions extends AppCompatActivity {
 
 
         builder
+                // Setting Positive Button
                 .setPositiveButton(
                         "Yes",
                         new DialogInterface

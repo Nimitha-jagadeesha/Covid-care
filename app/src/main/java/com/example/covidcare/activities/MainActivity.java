@@ -84,9 +84,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Get data
         getData();
+
+        //To permission for call from users which will be used in widget and covidcarecall
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
         }
+
+
         // Navigation Drawer
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -110,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        // Setting refresh listerner for the page
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -118,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 swipeRefresh.setRefreshing(false);
             }
         });
+
 
         // onSelect function of Spinner
         selectStateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -142,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+
+    //To check if the  user is admin or not
     private void isAdmin() {
         try{
         progressBarAdminCheck.setVisibility(View.VISIBLE);
@@ -176,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    // Event listener of Query
+    // Event listener of Query to get hospital details.
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -187,8 +195,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (dataSnapshot.exists()) {
                 progressBar.setVisibility(View.VISIBLE);
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    HospitalData hosdata = snapshot.getValue(HospitalData.class);
-                    HospitalExpert.addHospitalData(hosdata);
+                    HospitalData hospitalData = snapshot.getValue(HospitalData.class);
+                    HospitalExpert.addHospitalData(hospitalData);
                 }
                 adaptor.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
