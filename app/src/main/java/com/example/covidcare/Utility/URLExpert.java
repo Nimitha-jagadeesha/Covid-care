@@ -1,5 +1,5 @@
 package com.example.covidcare.Utility;
-
+//This class contains all URL's.
 public class URLExpert
 {
     public static String getAllStates() {
@@ -10,4 +10,3 @@ public class URLExpert
         return "https://covid19.mathdro.id/api/countries/India";
     }
 }
-//https://covid19.mathdro.id/api

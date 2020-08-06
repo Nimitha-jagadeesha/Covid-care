@@ -6,7 +6,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-//This class handels all network request.Don't edit unless u know.
+//This class handel all network requests.
 public class NetworkQueueSingleton
 {
     private static NetworkQueueSingleton mInstance;

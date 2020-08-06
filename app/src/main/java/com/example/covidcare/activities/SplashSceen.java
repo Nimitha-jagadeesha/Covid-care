@@ -31,7 +31,7 @@ public class SplashSceen extends AppCompatActivity {
         // Loading Mode settings
         loadSettings();
 
-        // In order to make spash screeen visible for 0.5 sec and start MAinActivity / SignInActivity
+        // In order to make splash screen visible for 0.5 sec and start MAinActivity / SignInActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

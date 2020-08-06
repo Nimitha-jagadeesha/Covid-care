@@ -1,5 +1,5 @@
 package com.example.covidcare.adaptors;
-
+//Adaptor for hospital details recycler view.
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

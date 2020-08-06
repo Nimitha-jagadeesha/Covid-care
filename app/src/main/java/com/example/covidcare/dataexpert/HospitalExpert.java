@@ -3,7 +3,7 @@ package com.example.covidcare.dataexpert;
 import com.example.covidcare.models.HospitalData;
 
 import java.util.ArrayList;
-
+//This is a class which contains list of hospital details
 public class HospitalExpert {
     private static ArrayList<HospitalData> hospitalsAndBedCountList = new ArrayList<HospitalData>();
 

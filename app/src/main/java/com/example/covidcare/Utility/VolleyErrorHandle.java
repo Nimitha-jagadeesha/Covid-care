@@ -21,23 +21,25 @@ public class VolleyErrorHandle
         }
         else if (error instanceof AuthFailureError)
         {
-            //dialobox for session has expired and take him to login
+            //Toast for session has expired and take him to login
             Toast.makeText(context, "This session has expired please login again", Toast.LENGTH_LONG).show();
 
         }
         else if (error instanceof ServerError)
         {
+            //Toast for server error
             Toast.makeText(context, "Something went wrong please try after sometime", Toast.LENGTH_LONG).show();
 
         }
         else if (error instanceof NetworkError)
         {
+            //Toast for network error.
             Toast.makeText(context, "Something went wrong please try after sometime", Toast.LENGTH_LONG).show();
 
         }
         else if (error instanceof ParseError)
         {
-            //Add mechanism for user to repor error
+            //Add mechanism for user to report error
             Toast.makeText(context, "Something went wrong please try after sometime", Toast.LENGTH_LONG).show();
         }
     }

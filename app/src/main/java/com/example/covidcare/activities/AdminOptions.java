@@ -306,8 +306,7 @@ public class AdminOptions extends AppCompatActivity {
                             public void onClick(DialogInterface dialog,
                                                 int which) {
 
-                                // If user click no
-                                // then dialog box is canceled.
+                                // If user click no then dialog box is canceled.
                                 dialog.cancel();
                             }
                         });

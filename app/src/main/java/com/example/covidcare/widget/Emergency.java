@@ -39,12 +39,14 @@ public class Emergency extends AppWidgetProvider {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
 
-
+        // Setting pending intent.
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.emergency);
         String s = "tel:108";
         Intent intent = new Intent(Intent.ACTION_CALL);
         intent.setData(Uri.parse(s));
         PendingIntent configPendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        // setting onclick listener for the widget view
 
         remoteViews.setOnClickPendingIntent(R.id.widget, configPendingIntent);
         appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);

@@ -67,7 +67,9 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // To get fading transformation effect
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
         setContentView(R.layout.activity_admin);
 
         //Binding all Views
@@ -78,7 +80,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
         }
 
-        //To get Data via API's
+        //To get Data via APIs
         getData();
 
         // Navigation Drawer
@@ -120,7 +122,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
 
 
-        // onSelect function of Spinner
+        // onSelect method of Spinner
         selectStateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -145,7 +147,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
 
 
-    // Event listener of Query to get hospital data
+    // Event listener for Query to get hospital data
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -166,7 +168,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 recyclerViewHospitalList.setVisibility(View.VISIBLE);
 
             } catch (Exception e) {
-                //Toast.makeText(AdminActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
         }
 

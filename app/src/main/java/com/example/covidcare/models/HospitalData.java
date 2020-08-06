@@ -1,5 +1,7 @@
 package com.example.covidcare.models;
 
+//Model class of hospital data.
+
 public class HospitalData {
     private String numberOfBeds;
     private String hospitalName;

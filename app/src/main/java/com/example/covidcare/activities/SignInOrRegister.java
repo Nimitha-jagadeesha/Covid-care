@@ -32,12 +32,13 @@ public class SignInOrRegister extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // To get fading transformation effect
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
         setContentView(R.layout.activity_sign_in_or_register);
 
         // Binding All the Views
         bindViews();
 
-        // If user has already logged in then starting MainActivity
+        // If user has already logged in then to start MainActivity
         if (mAuth.getCurrentUser() != null) {
             finish();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -54,7 +55,7 @@ public class SignInOrRegister extends AppCompatActivity {
 
     // OnClick listener for Signin/Register Button
     public void onClickSignInOrRegister(View v) {
-        //Setting a list of providers to signin in AutUi IdgConfig list
+        //Setting a list of providers to signin in AutUi IdpConfig list
         List<AuthUI.IdpConfig> provider = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build(),
@@ -81,13 +82,13 @@ public class SignInOrRegister extends AppCompatActivity {
         // Checking if this function called for auth ui action
         if (requestCode == AUTH_UI_REQUEST_CODE) {
 
-            // On sucessfully logged in
+            // On successfully logged in
             if (resultCode == RESULT_OK) {
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
-                // Checking if user registered now or logged in
+                // Checking whether user has registered or logged
                 if (user.getMetadata().getCreationTimestamp() == user.getMetadata().getLastSignInTimestamp()) {
                     Toast.makeText(this, "Successfully Signed Up", Toast.LENGTH_SHORT).show();
 

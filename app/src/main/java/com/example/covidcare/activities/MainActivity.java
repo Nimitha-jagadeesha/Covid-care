@@ -73,8 +73,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // To get fading transformation effect
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
         setContentView(R.layout.activity_main);
+
+        //binding all views
         bindViews();
 
         progressBarAdminCheck.setVisibility(View.VISIBLE);
@@ -114,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        // Setting refresh listerner for the page
+        // Setting refresh listener for the page
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -125,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
 
-        // onSelect function of Spinner
+        // onSelect method of Spinner
         selectStateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -226,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    // OnSelect function of navigation Drawer
+    // OnSelect method of navigation Drawer
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -289,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    // Parsing response to get states
+    // Parsing response to get states's name
     private void parseData(JSONObject response) {
 
         try {

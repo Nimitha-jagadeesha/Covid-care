@@ -1,5 +1,8 @@
 package com.example.covidcare.models;
 
+
+//Model class for user data.
+
 public class UsersData {
     private String emailOrNumber;
     private String id;

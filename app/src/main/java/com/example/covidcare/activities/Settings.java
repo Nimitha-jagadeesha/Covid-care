@@ -35,7 +35,7 @@ public class Settings extends AppCompatActivity {
         //Binding all Views
         bindViews();
 
-        // setting earlier settings of darkmode in switch
+        // To maintain earlier set mode in switch.
         switchSetting.setChecked(checked);
 
         // Setting onChange listener for switch of darkMode
@@ -66,7 +66,7 @@ public class Settings extends AppCompatActivity {
     }
 
 
-    // Onclick fuction of logOut
+    // Onclick method of logOut
     public void onClickLogOut(View v) {
         FirebaseAuth.getInstance().signOut();
         finish();
@@ -109,8 +109,7 @@ public class Settings extends AppCompatActivity {
                         "No",
                         (dialog, which) -> {
 
-                            // If user click no
-                            // then dialog box is canceled.
+                            // If user click no then dialog box is canceled.
                             dialog.cancel();
                         });
 
